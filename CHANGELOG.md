@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/mcarvin8/3dx/compare/v1.0.0...v1.0.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* **dev-deps:** Bump the dev-dependencies group across 1 directory with 3 updates ([#2](https://github.com/mcarvin8/3dx/issues/2)) ([44d549c](https://github.com/mcarvin8/3dx/commit/44d549c61be80db1d8b627db37d065f769433ca4))
+
 ## 1.0.0 (2026-08-19)
 
 

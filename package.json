@@ -1,7 +1,7 @@
 {
   "name": "@mcarvin/3dx",
   "description": "Community template for modern Salesforce CLI (sf) plugins: npm, Vitest, Biome, and current GitHub Actions in place of the archived yarn/mocha/nyc/eslint stack from the official template.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "@oclif/core": "4.13.5",
     "@salesforce/core": "9.1.2",
