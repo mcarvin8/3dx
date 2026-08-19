@@ -1,0 +1,61 @@
+# -- CLEAN
+tmp/
+
+.sfdx/
+
+# never checkin npm config
+.npmrc
+
+# debug logs
+npm-error.log
+yarn-error.log
+yarn.lock
+
+# compile source
+lib
+
+# test artifacts
+*xunit.xml
+*checkstyle.xml
+*unitcoverage
+.nyc_output
+coverage
+coverage.txt
+coverage-*.xml
+test_session*
+
+# generated docs
+docs
+
+# ignore sfdx-trust files
+*.tgz
+*.sig
+package.json.bak.
+
+# -- CLEAN ALL
+*.tsbuildinfo
+.wireit
+node_modules
+
+# --
+# put files here you don't want cleaned with sf-clean
+
+# os specific files
+.DS_Store
+.idea
+
+oclif.manifest.json
+
+oclif.lock
+*.log
+stderr*.txt
+stdout*.txt
+
+# stryker mutation testing
+.stryker-tmp
+reports
+
+# megalinter output
+megalinter-reports/
+.megalinter_github_conf/
+mega-linter.log
