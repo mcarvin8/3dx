@@ -62,7 +62,15 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 3. Replace the example `hello` command with your first real command (see [Adding a command](#adding-a-command)), or delete it if you're starting from a bare skeleton.
 4. `npm install`, then `npm run build && npm test` to confirm everything still passes under the new name.
 5. If you want npm Trusted Publishing (no `NPM_TOKEN` secret), register this repo + the `release.yml` workflow as a trusted publisher at `https://www.npmjs.com/package/<name>/access` before your first tagged release. Otherwise, see the comment in `release.yml` for the classic-token alternative.
-6. Set repo secrets used by CI as needed: `CODECOV_TOKEN` (coverage upload), `TESTKIT_*` (NUTs against a real Dev Hub — optional, NUTs using `devhubAuthStrategy: 'NONE'` don't need it), `STRYKER_DASHBOARD_API_KEY` (optional, full mutation runs only).
+6. **Grant the `GITHUB_TOKEN` write access.** In repo **Settings → Actions → General → Workflow permissions**, select **Read and write permissions** and check **Allow GitHub Actions to create and approve pull requests**. Both are required:
+   - `release-please` (`release.yml`) needs write access to open/update the release PR and push the release commit.
+   - MegaLinter's auto-fix step (`megalinter.yml`, `git-auto-commit-action`) needs write access to push formatting fixes back to PR branches.
+
+   Without this, both fail with a 403 (`release-please` errors on PR creation; MegaLinter's commit step is silently skipped).
+7. **Add repo secrets** under **Settings → Secrets and variables → Actions → New repository secret**:
+   - `CODECOV_TOKEN` — required for the coverage upload step in `test.yml`/`release.yml` to succeed. Add this repo at [codecov.io](https://about.codecov.io/) first, then copy the token from the repo's Codecov settings.
+   - `TESTKIT_*` (`TESTKIT_AUTH_URL`, `TESTKIT_HUB_USERNAME`, `TESTKIT_JWT_CLIENT_ID`, `TESTKIT_JWT_KEY`, `TESTKIT_HUB_INSTANCE`) — optional, only needed if you point NUTs at a real Dev Hub instead of `devhubAuthStrategy: 'NONE'`.
+   - `STRYKER_DASHBOARD_API_KEY` — optional, only needed for the full mutation run's dashboard upload (`workflow_dispatch`).
 
 ## Project layout
 
