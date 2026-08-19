@@ -26,16 +26,16 @@ This repo is itself a working plugin (one example command, `sf 3dx hello`) so ev
 
 Salesforce's official `plugin-template` is the standard starting point for a new `sf` plugin, but its dependency stack has drifted from what the Node.js ecosystem uses day to day:
 
-| Concern           | `plugin-template`   | `3dx`                             |
-|--------------------|---------------------|------------------------------------|
-| Package manager    | Yarn                | npm                                |
-| Test runner        | Mocha + Chai        | Vitest                             |
-| Coverage           | nyc (Istanbul CLI)  | Vitest's built-in v8 coverage      |
-| Lint + format      | ESLint + Prettier   | Biome (single tool, one config)    |
-| Mutation testing    | none                | Stryker (optional, incremental on PRs) |
-| Task orchestration | npm scripts only    | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
-| Commit hygiene     | none built in       | Husky + commitlint + lint-staged   |
-| Releases           | manual              | release-please + npm Trusted Publishing (OIDC) |
+| Concern            | `plugin-template`  | `3dx`                                                                    |
+|--------------------|--------------------|--------------------------------------------------------------------------|
+| Package manager    | Yarn               | npm                                                                      |
+| Test runner        | Mocha + Chai       | Vitest                                                                   |
+| Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage                                            |
+| Lint + format      | ESLint + Prettier  | Biome (single tool, one config)                                          |
+| Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
+| Task orchestration | npm scripts only   | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
+| Commit hygiene     | none built in      | Husky + commitlint + lint-staged                                         |
+| Releases           | manual             | release-please + npm Trusted Publishing (OIDC)                           |
 
 None of this changes what a plugin *is* — it's still an [oclif](https://oclif.io/) command tree using `@oclif/core` and `@salesforce/sf-plugins-core`, same as the official template. What changes is everything around it: faster installs, one linter instead of two, tests that don't need a compile step first, and CI that mirrors what you'd actually run locally.
 
@@ -129,23 +129,23 @@ EXAMPLES
   `sf 3dx hello --name "World"`
 ```
 
-_See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v0.1.0/src/commands/3dx/hello.ts)_
+*See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v0.1.0/src/commands/3dx/hello.ts)*
 <!-- commandsstop -->
 
 ## Scripts
 
-| Command                | Does |
-|-------------------------|------|
-| `npm run build`         | Compile + lint |
-| `npm test`               | Compile tests + unit tests (with coverage) + lint |
-| `npm run test:only`      | Unit tests + coverage, no lint/compile |
-| `npm run test:nuts`      | NUTs against the built plugin |
-| `npm run test:mutation`  | Full Stryker run |
+| Command                             | Does                                              |
+|-------------------------------------|---------------------------------------------------|
+| `npm run build`                     | Compile + lint                                    |
+| `npm test`                          | Compile tests + unit tests (with coverage) + lint |
+| `npm run test:only`                 | Unit tests + coverage, no lint/compile            |
+| `npm run test:nuts`                 | NUTs against the built plugin                     |
+| `npm run test:mutation`             | Full Stryker run                                  |
 | `npm run test:mutation:incremental` | Stryker against files changed vs. the base branch |
-| `npm run lint` / `format` | Biome check / write |
-| `npm run lint:dependencies` | knip — unused files/exports/deps |
-| `npm run lint:engine`   | ls-engines — dependency tree vs. `engines.node` |
-| `npm run clean`         | Remove build/test artifacts |
+| `npm run lint` / `format`           | Biome check / write                               |
+| `npm run lint:dependencies`         | knip — unused files/exports/deps                  |
+| `npm run lint:engine`               | ls-engines — dependency tree vs. `engines.node`   |
+| `npm run clean`                     | Remove build/test artifacts                       |
 
 ## CI workflows
 
