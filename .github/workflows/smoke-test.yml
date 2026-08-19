@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           npm install --global @salesforce/cli
-          echo 'y' | sf plugins install --force 3dx@latest
+          echo 'y' | sf plugins install --force @mcarvin/3dx@latest
           sf version --verbose --json
 
       - name: Use runner Salesforce CLI home in Testkit
