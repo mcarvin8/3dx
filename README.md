@@ -68,7 +68,7 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 
    Without this, both fail with a 403 (`release-please` errors on PR creation; MegaLinter's commit step is silently skipped).
 7. **Add repo secrets** under **Settings → Secrets and variables → Actions → New repository secret**:
-   - `CODECOV_TOKEN` — required for the coverage upload step in `test.yml`/`release.yml` to succeed. Add this repo at [codecov.io](https://about.codecov.io/) first, then copy the token from the repo's Codecov settings.
+   - `CODECOV_TOKEN` — required for the coverage upload step in `test.yml`/`release.yml` to succeed. Add this repo at [codecov.io](https://about.codecov.io/) first, then copy the token from the repo's Codecov settings — or, if you have several repos under one GitHub account, use your [global upload token](https://docs.codecov.com/docs/codecov-uploader#organization-token) instead (Codecov org settings → **Global Upload Token**): one token works across all your repos, so you're not hunting down a per-repo token every time you scaffold a new plugin from this template. `test.yml` also runs on Dependabot's PRs (e.g. the dev-dependencies bump), but Dependabot-triggered runs can't see regular Actions secrets — GitHub withholds them unless the secret is also added under **Settings → Secrets and variables → Dependabot → New repository secret**. Add `CODECOV_TOKEN` there too (same value, global or per-repo), or coverage upload silently fails on every Dependabot PR.
    - `TESTKIT_*` (`TESTKIT_AUTH_URL`, `TESTKIT_HUB_USERNAME`, `TESTKIT_JWT_CLIENT_ID`, `TESTKIT_JWT_KEY`, `TESTKIT_HUB_INSTANCE`) — optional, only needed if you point NUTs at a real Dev Hub instead of `devhubAuthStrategy: 'NONE'`.
    - `STRYKER_DASHBOARD_API_KEY` — optional, only needed for the full mutation run's dashboard upload (`workflow_dispatch`).
 
@@ -153,7 +153,7 @@ EXAMPLES
 - **`release.yml`** — on push to `main`: release-please opens/updates a release PR; when a release is published, it publishes to npm (OIDC Trusted Publishing) and triggers the smoke test.
 - **`smoke-test.yml`** — installs the just-published plugin into a real `sf` CLI and reruns the NUT suite against it, cross-OS.
 - **`megalinter.yml`** — broad-spectrum linting on PRs (secrets, Dockerfiles, shell scripts, YAML, etc. — Biome already owns JS/TS, so those linters are disabled in `.mega-linter.yml` to avoid overlap).
-- **`mutation.yml`** — incremental Stryker on PRs (scoped to changed files, posts a PR comment); full run + optional dashboard upload via manual `workflow_dispatch`.
+- **`mutation.yml`** — incremental Stryker on PRs (scoped to changed files, posts a PR comment); full run + optional dashboard upload via manual `workflow_dispatch`. Both jobs `npm install typescript@6.0.3 --no-save` right after `npm run compile` — Stryker's TypeScript checker plugin doesn't yet support TS 7 (only "experimental support" as of Stryker 10), so the repo's real TS 7 toolchain builds the plugin, then gets swapped for a TS 6 copy for just the mutation run. `--no-save` keeps `package.json`/the lockfile untouched, and the downgrade never leaves the job — runners are thrown away after each run.
 
 ## Trimming it down
 
