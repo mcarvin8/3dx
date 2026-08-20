@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/mcarvin8/3dx/compare/v1.2.1...v1.2.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* migrate mutation test scripts to wireit ([bfbc00a](https://github.com/mcarvin8/3dx/commit/bfbc00acd7e4c7a86dd470a14dd1f885c5ffd2b2))
+
 ## [1.2.1](https://github.com/mcarvin8/3dx/compare/v1.2.0...v1.2.1) (2026-08-20)
 
 
