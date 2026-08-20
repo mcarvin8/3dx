@@ -44,7 +44,7 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 - **Lint/format**: Biome, one config (`biome.json`), no ESLint/Prettier split to keep in sync.
 - **Tests**: Vitest for unit tests (`test/**/*.test.ts`) with coverage thresholds, and `@salesforce/cli-plugins-testkit` for NUTs (`test/**/*.nut.ts`) that exercise the compiled plugin through a real `sf` process.
 - **Mutation testing**: Stryker, wired to run incrementally against only the files a PR changed (`scripts/incremental-mutation.mjs`), with an optional full run and dashboard upload via `workflow_dispatch`.
-- **Git hooks**: Husky runs `lint-staged` (Biome, staged files only) on commit, commitlint on the commit message (Conventional Commits), and a full `npm run build` before push.
+- **Git hooks**: Husky runs `lint-staged` (Biome, staged files only) on commit, commitlint on the commit message (Conventional Commits), and before push, a full `npm run build` followed by `npm run prepack` (`oclif manifest && oclif readme`) — the push is blocked if regenerating the README's [Command Reference](#command-reference) produces a diff, so it never drifts from the actual commands.
 - **Dependency hygiene**: `knip` flags unused exports/files/deps; `ls-engines` checks the dependency tree against the `engines.node` floor.
 - **CI**: GitHub Actions for lint + unit tests + NUTs across OS/Node matrices, MegaLinter on PRs, incremental Stryker on PRs, and a release pipeline (release-please → npm publish via OIDC → post-publish smoke test).
 
@@ -128,7 +128,7 @@ EXAMPLES
   `sf 3dx hello --name "World"`
 ```
 
-*See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v0.1.0/src/commands/3dx/hello.ts)*
+_See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.1.0/src/commands/3dx/hello.ts)_
 <!-- commandsstop -->
 
 ## Scripts
