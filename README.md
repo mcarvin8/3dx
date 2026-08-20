@@ -2,9 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-**3dx** — a **third-party developer experience for Salesforce CLI**, built by the community for building modern `sf` plugins.
-
-A community template for building **Salesforce CLI (`sf`) plugins** on a current Node.js toolchain — npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) — instead of the stack baked into Salesforce's own [`plugin-template`](https://github.com/salesforcecli/plugin-template): Yarn, Mocha, nyc, and ESLint/Prettier, several of which are archived or in maintenance-only mode upstream.
+**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official [`plugin-template`](https://github.com/salesforcecli/plugin-template).
 
 <details>
   <summary>Table of Contents</summary>
