@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-**3dx** stands for **third-party Salesforce DX** — a community-built development experience for creating modern Salesforce CLI plugins.
+**3dx** — a **third-party developer experience for Salesforce CLI**, built by the community for building modern `sf` plugins.
 
 A community template for building **Salesforce CLI (`sf`) plugins** on a current Node.js toolchain — npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) — instead of the stack baked into Salesforce's own [`plugin-template`](https://github.com/salesforcecli/plugin-template): Yarn, Mocha, nyc, and ESLint/Prettier, several of which are archived or in maintenance-only mode upstream.
 
@@ -94,7 +94,7 @@ Command, message file, unit test, and NUT are named to mirror each other 1:1 —
 2. Add `src/commands/<topic>/<command>.ts` extending `SfCommand<YourResultType>`, loading the message file via `Messages.loadMessages('<package-name>', '<topic>.<command>')`.
 3. Add a unit test under `test/commands/<topic>/<command>.test.ts` that calls `YourCommand.run([...])` directly and asserts on the returned result.
 4. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`.
-5. Run `npx oclif readme` (part of `npm run prepack`) to regenerate the [Command Reference](#command-reference) below from your command's flags and message file — commit the result along with `oclif.manifest.json`.
+5. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`. `oclif.manifest.json` is generated during packaging and is intentionally not committed.
 
 ## Command Reference
 
