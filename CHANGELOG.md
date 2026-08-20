@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/mcarvin8/3dx/compare/v1.2.0...v1.2.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* rebuild and regenerate README during init, not just text-sweep ([9c48176](https://github.com/mcarvin8/3dx/commit/9c481765a27c7d953aab3f325655e0f6481a3281))
+
 ## [1.2.0](https://github.com/mcarvin8/3dx/compare/v1.1.0...v1.2.0) (2026-08-20)
 
 
