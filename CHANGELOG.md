@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3](https://github.com/mcarvin8/3dx/compare/v1.2.2...v1.2.3) (2026-08-20)
+
+
+### Bug Fixes
+
+* add npm run readme script ([2715a7c](https://github.com/mcarvin8/3dx/commit/2715a7c51fd397f6e8e1ceca0acb9aee86f913e7))
+* include README.md as input to the readme wireit task ([3019241](https://github.com/mcarvin8/3dx/commit/301924112597132d36e4d207a0420bc01b927aa1))
+
 ## [1.2.2](https://github.com/mcarvin8/3dx/compare/v1.2.1...v1.2.2) (2026-08-20)
 
 
