@@ -196,7 +196,8 @@
       "command": "oclif readme",
       "files": [
         "src/commands/3dx/hello.ts",
-        "messages/3dx.hello.md"
+        "messages/3dx.hello.md",
+        "README.md"
       ],
       "dependencies": [
         "build"
