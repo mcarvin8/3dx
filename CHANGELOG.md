@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/mcarvin8/3dx/compare/v1.1.0...v1.2.0) (2026-08-20)
+
+
+### Features
+
+* keep README command reference in sync automatically ([cda9cc3](https://github.com/mcarvin8/3dx/commit/cda9cc32462bdafd1b5e6ad31a08276e742f338d))
+
+
+### Bug Fixes
+
+* clean up oclif manifest artifacts left by pre-push prepack ([03b0f75](https://github.com/mcarvin8/3dx/commit/03b0f7541e22a7d9c35d8657e575fb18b34f40e1))
+
 ## [1.1.0](https://github.com/mcarvin8/3dx/compare/v1.0.1...v1.1.0) (2026-08-20)
 
 
