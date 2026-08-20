@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official [`plugin-template`](https://github.com/salesforcecli/plugin-template).
+**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
 
 <details>
   <summary>Table of Contents</summary>
@@ -22,7 +22,7 @@
 
 ## Why this exists
 
-Salesforce's official `plugin-template` is the standard starting point for a new `sf` plugin, but its dependency stack has drifted from what the Node.js ecosystem uses day to day:
+Salesforce's official template is the standard starting point for a new `sf` plugin, but its dependency stack has drifted from what the latest the Node.js ecosystem has to offer:
 
 | Concern            | `plugin-template`  | `3dx`                                                                    |
 |--------------------|--------------------|--------------------------------------------------------------------------|
