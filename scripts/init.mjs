@@ -146,11 +146,17 @@ async function main() {
     path.join(repoRoot, 'messages', `${topic}.hello.md`),
   );
 
+  // `npm pack` tarball names come from the sanitized *package name*
+  // (scope stripped, "@"/"/" -> "-"), not the oclif topic — those can differ.
+  const tarballBase = pkgName.scope ? `${pkgName.scope}-${pkgName.unscoped}` : pkgName.unscoped;
+
   // 2. Sweep file contents: most-specific replacements first so a generic
   // "3dx" replacement doesn't clobber the package/repo substitutions.
   const replacements = [
     [`@mcarvin/${OLD_TOPIC}`, pkgName.full],
     ...(repo ? [[`mcarvin8/${OLD_TOPIC}`, repo]] : []),
+    [`${OLD_TOPIC}-*.tgz`, `${tarballBase}-*.tgz`],
+    [`${OLD_TOPIC}-v*.tgz`, `${tarballBase}-v*.tgz`],
     [new RegExp(`\\b${OLD_TOPIC}\\b`, 'g'), topic],
   ];
 
