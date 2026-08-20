@@ -47,7 +47,7 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 - **Git hooks**: Husky, via three hooks:
   - **commit**: `lint-staged` runs Biome against staged files only.
   - **commit-msg**: commitlint enforces Conventional Commits.
-  - **pre-push**: a full `npm run build` followed by `npm run prepack` (`oclif manifest && oclif readme`) — the push is blocked if regenerating the README's [Command Reference](#command-reference) produces a diff, so it never drifts from the actual commands.
+  - **pre-push**: a full `npm run build` followed by `npm run readme` (`oclif readme`) — the push is blocked if regenerating the README's [Command Reference](#command-reference) produces a diff, so it never drifts from the actual commands.
 - **Dependency hygiene**: `knip` flags unused exports/files/deps; `ls-engines` checks the dependency tree against the `engines.node` floor.
 - **CI**: GitHub Actions for lint + unit tests + NUTs across OS/Node matrices, MegaLinter on PRs, incremental Stryker on PRs, and a release pipeline (release-please → npm publish via OIDC → post-publish smoke test).
 
