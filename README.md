@@ -28,7 +28,7 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 |--------------------|--------------------|--------------------------------------------------------------------------|
 | Package manager    | Yarn               | npm                                                                      |
 | Test runner        | Mocha + Chai       | Vitest                                                                   |
-| Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage + upload to CodeCov.io                     |
+| Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage + upload to Codecov                        |
 | Lint + format      | ESLint + Prettier  | Biome (single tool, one config)                                          |
 | Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
 | Task orchestration | npm scripts only   | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
@@ -44,7 +44,10 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 - **Lint/format**: Biome, one config (`biome.json`), no ESLint/Prettier split to keep in sync.
 - **Tests**: Vitest for unit tests (`test/**/*.test.ts`) with coverage thresholds, and `@salesforce/cli-plugins-testkit` for NUTs (`test/**/*.nut.ts`) that exercise the compiled plugin through a real `sf` process.
 - **Mutation testing**: Stryker, wired to run incrementally against only the files a PR changed (`scripts/incremental-mutation.mjs`), with an optional full run and dashboard upload via `workflow_dispatch`.
-- **Git hooks**: Husky runs `lint-staged` (Biome, staged files only) on commit, commitlint on the commit message (Conventional Commits), and before push, a full `npm run build` followed by `npm run prepack` (`oclif manifest && oclif readme`) — the push is blocked if regenerating the README's [Command Reference](#command-reference) produces a diff, so it never drifts from the actual commands.
+- **Git hooks**: Husky, via three hooks:
+  - **commit**: `lint-staged` runs Biome against staged files only.
+  - **commit-msg**: commitlint enforces Conventional Commits.
+  - **pre-push**: a full `npm run build` followed by `npm run prepack` (`oclif manifest && oclif readme`) — the push is blocked if regenerating the README's [Command Reference](#command-reference) produces a diff, so it never drifts from the actual commands.
 - **Dependency hygiene**: `knip` flags unused exports/files/deps; `ls-engines` checks the dependency tree against the `engines.node` floor.
 - **CI**: GitHub Actions for lint + unit tests + NUTs across OS/Node matrices, MegaLinter on PRs, incremental Stryker on PRs, and a release pipeline (release-please → npm publish via OIDC → post-publish smoke test).
 
@@ -67,7 +70,10 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 
    Without this, both fail with a 403 (`release-please` errors on PR creation; MegaLinter's commit step is silently skipped).
 7. **Add repo secrets** under **Settings → Secrets and variables → Actions → New repository secret**:
-   - `CODECOV_TOKEN` — required for the coverage upload step in `test.yml`/`release.yml` to succeed. Add this repo at [codecov.io](https://about.codecov.io/) first, then copy the token from the repo's Codecov settings — or, if you have several repos under one GitHub account, use your [global upload token](https://docs.codecov.com/docs/codecov-uploader#organization-token) instead (Codecov org settings → **Global Upload Token**): one token works across all your repos, so you're not hunting down a per-repo token every time you scaffold a new plugin from this template. `test.yml` also runs on Dependabot's PRs (e.g. the dev-dependencies bump), but Dependabot-triggered runs can't see regular Actions secrets — GitHub withholds them unless the secret is also added under **Settings → Secrets and variables → Dependabot → New repository secret**. Add `CODECOV_TOKEN` there too (same value, global or per-repo), or coverage upload silently fails on every Dependabot PR.
+   - `CODECOV_TOKEN` — required for the coverage upload step in `test.yml`/`release.yml` to succeed.
+     - Add this repo at [codecov.io](https://about.codecov.io/) first, then copy the token from the repo's Codecov settings.
+     - Scaffolding several plugins from this template? Use your [global upload token](https://docs.codecov.com/docs/codecov-uploader#organization-token) instead (Codecov org settings → **Global Upload Token**) — one token works across all your repos, so there's no per-repo token to hunt down each time.
+     - `test.yml` also runs on Dependabot's PRs (e.g. the dev-dependencies bump), but Dependabot-triggered runs can't see regular Actions secrets — GitHub withholds them unless the secret is also added under **Settings → Secrets and variables → Dependabot → New repository secret**. Add `CODECOV_TOKEN` there too (same value, global or per-repo), or coverage upload silently fails on every Dependabot PR.
    - `TESTKIT_*` (`TESTKIT_AUTH_URL`, `TESTKIT_HUB_USERNAME`, `TESTKIT_JWT_CLIENT_ID`, `TESTKIT_JWT_KEY`, `TESTKIT_HUB_INSTANCE`) — optional, only needed if you point NUTs at a real Dev Hub instead of `devhubAuthStrategy: 'NONE'`.
    - `STRYKER_DASHBOARD_API_KEY` — optional, only needed for the full mutation run's dashboard upload (`workflow_dispatch`).
 
