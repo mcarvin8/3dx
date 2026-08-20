@@ -28,7 +28,7 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 |--------------------|--------------------|--------------------------------------------------------------------------|
 | Package manager    | Yarn               | npm                                                                      |
 | Test runner        | Mocha + Chai       | Vitest                                                                   |
-| Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage                                            |
+| Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage + upload to CodeCov.io                     |
 | Lint + format      | ESLint + Prettier  | Biome (single tool, one config)                                          |
 | Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
 | Task orchestration | npm scripts only   | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
