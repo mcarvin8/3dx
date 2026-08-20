@@ -76,6 +76,7 @@
     "postpack": "shx rm -f oclif.manifest.json oclif.lock",
     "prepack": "wireit",
     "prepare": "husky",
+    "readme": "wireit",
     "test": "wireit",
     "test:mutation": "wireit",
     "test:mutation:incremental": "wireit",
@@ -182,6 +183,20 @@
         "src/commands/3dx/hello.ts",
         "messages/3dx.hello.md",
         "README.md"
+      ],
+      "dependencies": [
+        "build"
+      ],
+      "output": [
+        "README.md"
+      ],
+      "clean": false
+    },
+    "readme": {
+      "command": "oclif readme",
+      "files": [
+        "src/commands/3dx/hello.ts",
+        "messages/3dx.hello.md"
       ],
       "dependencies": [
         "build"
