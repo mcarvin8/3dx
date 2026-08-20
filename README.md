@@ -52,15 +52,16 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 
 ## Using this template
 
-1. Click **Use this template** on GitHub (or `gh repo create my-plugin --template mcarvin8/3dx --public`).
-2. Rename the plugin — these all currently say `3dx`:
-   - `package.json`: `name`, `oclif.topics`, `repository.url`, `bugs.url`
-   - `src/commands/3dx/` → `src/commands/<your-topic>/`
-   - `messages/3dx.hello.md` → `messages/<your-topic>.<command>.md` (and the `Messages.loadMessages('3dx', ...)` call in each command)
-   - `test/commands/3dx/` → mirror the new command path
-   - `.github/workflows/smoke-test.yml`: the `sf plugins install --force 3dx@latest` line
+1. Click **Use this template** on GitHub (or `gh repo create my-plugin --template mcarvin8/3dx --public`), then clone it.
+2. Run `npm install` followed by `npm run init` to rename the plugin. It prompts for the new npm package name, oclif topic, `package.json` description, and GitHub `owner/repo` (guessed from `git remote origin` if one is set), then:
+   - renames `src/commands/3dx/` and `test/commands/3dx/` to your topic
+   - renames `messages/3dx.hello.md` and updates the `Messages.loadMessages('3dx', ...)` call in each command
+   - rewrites `package.json` (`name`, `description`, `oclif.topics`, `repository.url`, `bugs.url`) and the `sf plugins install --force 3dx@latest` line in `.github/workflows/smoke-test.yml`
+   - resets the version to `0.0.1`, clears `CHANGELOG.md`, and deletes itself when done
+
+   For a non-interactive run, pass flags instead: `npm run init -- --name=@myorg/my-plugin --topic=my-plugin --description="..." --repo=myorg/my-plugin --yes`.
 3. Replace the example `hello` command with your first real command (see [Adding a command](#adding-a-command)), or delete it if you're starting from a bare skeleton.
-4. `npm install`, then `npm run build && npm test` to confirm everything still passes under the new name.
+4. `npm install` again to refresh `package-lock.json` under the new name, then `npm run build && npm test` to confirm everything still passes.
 5. If you want npm Trusted Publishing (no `NPM_TOKEN` secret), register this repo + the `release.yml` workflow as a trusted publisher at `https://www.npmjs.com/package/<name>/access` before your first tagged release. Otherwise, see the comment in `release.yml` for the classic-token alternative.
 6. **Grant the `GITHUB_TOKEN` write access.** In repo **Settings → Actions → General → Workflow permissions**, select **Read and write permissions** and check **Allow GitHub Actions to create and approve pull requests**. Both are required:
    - `release-please` (`release.yml`) needs write access to open/update the release PR and push the release commit.

@@ -69,6 +69,7 @@
     "clean:package-manager": "wireit",
     "compile": "wireit",
     "format": "wireit",
+    "init": "node scripts/init.mjs",
     "lint": "wireit",
     "lint:dependencies": "wireit",
     "lint:engine": "wireit",
