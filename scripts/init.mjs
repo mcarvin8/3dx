@@ -10,7 +10,7 @@
  * removes itself.
  */
 
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -181,7 +181,19 @@ async function main() {
   // 4. Clear the changelog.
   await fs.writeFile(path.join(repoRoot, 'CHANGELOG.md'), '# Changelog\n', 'utf8');
 
-  // 5. Remove this script now that it's done its job.
+  // 5. Rebuild and regenerate the README's Command Reference for real (not
+  // just text-swept) -- it embeds a version tag (e.g. "blob/v1.1.0/...") that
+  // the sweep above can't touch, and would otherwise stay stale after the
+  // version reset.
+  try {
+    execSync('npm run build', { cwd: repoRoot, stdio: 'inherit' });
+    execSync('npm run prepack', { cwd: repoRoot, stdio: 'inherit' });
+    execSync('npm run postpack', { cwd: repoRoot, stdio: 'inherit' });
+  } catch {
+    console.warn('\nCould not rebuild/regenerate the README automatically -- run `npm run build && npm run prepack` yourself.');
+  }
+
+  // 6. Remove this script now that it's done its job.
   if (!args.keepScript) {
     await fs.rm(__filenameSafe(), { force: true });
   }
