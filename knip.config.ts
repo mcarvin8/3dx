@@ -1,6 +1,6 @@
 export default {
   entry: [
-    'src/commands/3dx/*.ts',
+    'src/commands/**/*.ts',
     'bin/dev.js',
     'bin/run.js',
     'scripts/**/*.{ts,mjs}',
