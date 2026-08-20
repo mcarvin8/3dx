@@ -1,4 +1,3 @@
-npm run build
 npm run readme
 
 if ! git diff --quiet -- README.md; then

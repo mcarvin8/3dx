@@ -186,10 +186,9 @@ async function main() {
   // the sweep above can't touch, and would otherwise stay stale after the
   // version reset.
   try {
-    execSync('npm run build', { cwd: repoRoot, stdio: 'inherit' });
     execSync('npm run readme', { cwd: repoRoot, stdio: 'inherit' });
   } catch {
-    console.warn('\nCould not rebuild/regenerate the README automatically -- run `npm run build && npm run readme` yourself.');
+    console.warn('\nCould not rebuild/regenerate the README automatically -- run `npm run readme` yourself.');
   }
 
   // 6. Remove this script now that it's done its job.
