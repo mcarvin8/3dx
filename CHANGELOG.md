@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/mcarvin8/3dx/compare/v1.0.1...v1.1.0) (2026-08-20)
+
+
+### Features
+
+* add npm run init script to rename template on first use ([d145f7c](https://github.com/mcarvin8/3dx/commit/d145f7c9bc510975a7f88cc01e8eded7bb9a7ae3))
+
+
+### Bug Fixes
+
+* derive init script tarball glob from package name, not topic ([1f01890](https://github.com/mcarvin8/3dx/commit/1f018909f797bed83d6ff054f3380a46e43b29d2))
+
 ## [1.0.1](https://github.com/mcarvin8/3dx/compare/v1.0.0...v1.0.1) (2026-08-19)
 
 
