@@ -22,7 +22,7 @@
 
 ## Why this exists
 
-Salesforce's official template is the standard starting point for a new `sf` plugin, but its dependency stack has drifted from what the latest the Node.js ecosystem has to offer:
+Salesforce's official template is the standard starting point for a new `sf` plugin, but its dependency stack has drifted from the latest the Node.js ecosystem has to offer:
 
 | Concern            | `plugin-template`  | `3dx`                                                                    |
 |--------------------|--------------------|--------------------------------------------------------------------------|
@@ -92,7 +92,7 @@ Command, message file, unit test, and NUT are named to mirror each other 1:1 —
 2. Add `src/commands/<topic>/<command>.ts` extending `SfCommand<YourResultType>`, loading the message file via `Messages.loadMessages('<package-name>', '<topic>.<command>')`.
 3. Add a unit test under `test/commands/<topic>/<command>.test.ts` that calls `YourCommand.run([...])` directly and asserts on the returned result.
 4. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`.
-5. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`. `oclif.manifest.json` is generated during packaging and is intentionally not committed.
+5. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
 
 ## Command Reference
 
