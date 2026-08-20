@@ -2,9 +2,9 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-A community template for building **Salesforce CLI (`sf`) plugins** on a current Node.js toolchain — npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) — instead of the stack baked into Salesforce's own [`plugin-template`](https://github.com/salesforcecli/plugin-template): Yarn, Mocha, nyc, and ESLint/Prettier, several of which are archived or in maintenance-only mode upstream.
+**3dx** stands for **third-party Salesforce DX** — a community-built development experience for creating modern Salesforce CLI plugins.
 
-This repo is itself a working plugin (one example command, `sf 3dx hello`) so every piece of tooling — build, lint, test, coverage, mutation testing, CI, release — runs and is verified, not just described.
+A community template for building **Salesforce CLI (`sf`) plugins** on a current Node.js toolchain — npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) — instead of the stack baked into Salesforce's own [`plugin-template`](https://github.com/salesforcecli/plugin-template): Yarn, Mocha, nyc, and ESLint/Prettier, several of which are archived or in maintenance-only mode upstream.
 
 <details>
   <summary>Table of Contents</summary>
