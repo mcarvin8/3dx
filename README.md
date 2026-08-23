@@ -30,7 +30,7 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 | Package manager    | Yarn               | npm                                                                      |
 | Test runner        | Mocha + Chai       | Vitest                                                                   |
 | Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage + upload to Codecov                        |
-| Lint + format      | ESLint + Prettier  | Biome (single tool, one config)                                          |
+| Lint + format      | ESLint + Prettier  | Biome (single tool, one config) + MegaLinter on PRs                                         |
 | Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
 | Task orchestration | mix of @salesforce/dev-scripts, wireit, and scripts    | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
 | Commit hygiene     | none built in (husky and commitlint files present but missing husky dev dep)       | Husky + commitlint + lint-staged                                         |
