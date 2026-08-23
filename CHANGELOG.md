@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/mcarvin8/3dx/compare/v1.2.3...v1.2.4) (2026-08-23)
+
+
+### Bug Fixes
+
+* wildcard hard-coded 3dx paths in wireit config ([afc8e72](https://github.com/mcarvin8/3dx/commit/afc8e72ccb6f8b7afe05f2a4517257e12e5a3015))
+
 ## [1.2.3](https://github.com/mcarvin8/3dx/compare/v1.2.2...v1.2.3) (2026-08-20)
 
 
