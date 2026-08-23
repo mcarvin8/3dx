@@ -32,9 +32,9 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 | Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage + upload to Codecov                        |
 | Lint + format      | ESLint + Prettier  | Biome (single tool, one config)                                          |
 | Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
-| Task orchestration | npm scripts only   | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
+| Task orchestration | mix of @salesforce/dev-scripts, wireit, and scripts    | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
 | Commit hygiene     | none built in      | Husky + commitlint + lint-staged                                         |
-| Releases           | manual             | release-please + npm Trusted Publishing (OIDC)                           |
+| Releases           | manually triggered workflow            | release-please + npm Trusted Publishing (OIDC)                           |
 | GitHub Action      | none               | native node Action, sharing logic with the CLI command — see [GitHub Action](#github-action) |
 
 None of this changes what a plugin *is* — it's still an [oclif](https://oclif.io/) command tree using `@oclif/core` and `@salesforce/sf-plugins-core`, same as the official template. What changes is everything around it: faster installs, one linter instead of two, tests that don't need a compile step first, and CI that mirrors what you'd actually run locally.
