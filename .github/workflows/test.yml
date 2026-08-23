@@ -32,6 +32,11 @@ jobs:
       - name: Check Node.js engine versions
         run: npm run lint:engine
 
+      - name: Verify Action bundle is up to date
+        run: |
+          npm run build:action
+          git diff --exit-code dist/action
+
   unit-tests:
     name: Unit Tests (${{ matrix.os }}, node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}

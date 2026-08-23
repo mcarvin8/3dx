@@ -3,9 +3,9 @@
 import { Messages } from '@salesforce/core';
 import { Flags, SfCommand } from '@salesforce/sf-plugins-core';
 
-export type ThreeDxHelloResult = {
-  message: string;
-};
+import { type GreetResult, greet } from '../../core/hello.js';
+
+export type ThreeDxHelloResult = GreetResult;
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 /* v8 ignore next -- always-executed SDK plumbing; v8 misattributes this line as a coverage miss when the module is imported directly by a unit test */
@@ -27,8 +27,8 @@ export default class ThreeDxHello extends SfCommand<ThreeDxHelloResult> {
 
   public async run(): Promise<ThreeDxHelloResult> {
     const { flags } = await this.parse(ThreeDxHello);
-    const message = `Hello, ${flags.name}!`;
-    this.log(message);
-    return { message };
+    const result = greet(flags.name);
+    this.log(result.message);
+    return result;
   }
 }

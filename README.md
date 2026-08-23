@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
+**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template — and, optionally, a matching GitHub Action wrapper — built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
 
 <details>
   <summary>Table of Contents</summary>
@@ -15,6 +15,7 @@
 - [Command Reference](#command-reference)
 - [Scripts](#scripts)
 - [CI workflows](#ci-workflows)
+- [GitHub Action](#github-action)
 - [Trimming it down](#trimming-it-down)
 - [License](#license)
 
@@ -34,6 +35,7 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 | Task orchestration | npm scripts only   | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
 | Commit hygiene     | none built in      | Husky + commitlint + lint-staged                                         |
 | Releases           | manual             | release-please + npm Trusted Publishing (OIDC)                           |
+| GitHub Action      | none               | native node Action, sharing logic with the CLI command — see [GitHub Action](#github-action) |
 
 None of this changes what a plugin *is* — it's still an [oclif](https://oclif.io/) command tree using `@oclif/core` and `@salesforce/sf-plugins-core`, same as the official template. What changes is everything around it: faster installs, one linter instead of two, tests that don't need a compile step first, and CI that mirrors what you'd actually run locally.
 
@@ -50,6 +52,7 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
   - **pre-push**: `npm run readme` (a full build, via wireit's dependency graph, then `oclif readme`) — the push is blocked if regenerating the README's [Command Reference](#command-reference) produces a diff, so it never drifts from the actual commands.
 - **Dependency hygiene**: `knip` flags unused exports/files/deps; `ls-engines` checks the dependency tree against the `engines.node` floor.
 - **CI**: GitHub Actions for lint + unit tests + NUTs across OS/Node matrices, MegaLinter on PRs, incremental Stryker on PRs, and a release pipeline (release-please → npm publish via OIDC → post-publish smoke test).
+- **GitHub Action**: the example command is also wrapped as a committed, bundled `action.yml` so consumers can `uses: <owner>/<repo>@v1` in their own workflows without installing the plugin — see [GitHub Action](#github-action).
 
 ## Using this template
 
@@ -81,16 +84,22 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 
 ```
 src/
-  commands/3dx/hello.ts   # one command = one file; class name matches the file
-  index.ts                 # oclif plugin entry point (leave as `export default {}`)
+  commands/3dx/hello.ts   # one command = one file; thin wrapper over src/core
+  core/hello.ts             # the actual logic — a plain function, no oclif/Action deps
+  action/{index,main}.ts    # GitHub Action entrypoint, wraps src/core the same way
+  index.ts                  # oclif plugin entry point (leave as `export default {}`)
 messages/
   3dx.hello.md             # summary/description/examples/flag text, loaded via Messages
 test/
   commands/3dx/hello.test.ts  # unit test — imports the command class directly
   commands/3dx/hello.nut.ts   # NUT — drives the compiled plugin through execCmd
+  core/hello.test.ts          # unit test — imports the pure logic function directly
+  action/main.test.ts         # unit test — mocks @actions/core and src/core
+action.yml                    # GitHub Action manifest, see GitHub Action
+dist/action/index.cjs         # committed esbuild bundle the Action manifest points at
 ```
 
-Command, message file, unit test, and NUT are named to mirror each other 1:1 — that mapping is what `knip.config.ts` and the Stryker `mutate` excludes assume.
+Command, message file, unit test, and NUT are named to mirror each other 1:1 — that mapping is what `knip.config.ts` and the Stryker `mutate` excludes assume. `src/core/hello.ts` is what makes the command and the Action reusable from one place — see [GitHub Action](#github-action).
 
 ## Adding a command
 
@@ -99,6 +108,7 @@ Command, message file, unit test, and NUT are named to mirror each other 1:1 —
 3. Add a unit test under `test/commands/<topic>/<command>.test.ts` that calls `YourCommand.run([...])` directly and asserts on the returned result.
 4. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`.
 5. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
+6. Want this command exposed as a [GitHub Action](#github-action) too? Extract its logic into `src/core/<command>.ts` as a plain function (that's already how `hello` is wired), then have both the command class and `src/action/main.ts` call it. The template only wires the Action to one command at a time — exposing more than one is a per-plugin decision (either branch on an Action input, or ship additional `action.yml` files in subdirectories).
 
 ## Command Reference
 
@@ -141,7 +151,8 @@ _See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.2
 
 | Command                             | Does                                              |
 |-------------------------------------|---------------------------------------------------|
-| `npm run build`                     | Compile + lint                                    |
+| `npm run build`                     | Compile + lint + Action bundle                    |
+| `npm run build:action`              | Bundle `src/action` into `dist/action/index.cjs`  |
 | `npm test`                          | Compile tests + unit tests (with coverage) + lint |
 | `npm run test:only`                 | Unit tests + coverage, no lint/compile            |
 | `npm run test:nuts`                 | NUTs against the built plugin                     |
@@ -154,11 +165,32 @@ _See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.2
 
 ## CI workflows
 
-- **`test.yml`** — runs on every push to a non-main branch and via `workflow_call`: lint, unit tests + coverage (matrix across ubuntu/windows/macos × Node 22/24/26), then NUTs on the same matrix.
-- **`release.yml`** — on push to `main`: release-please opens/updates a release PR; when a release is published, it publishes to npm (OIDC Trusted Publishing) and triggers the smoke test.
+- **`test.yml`** — runs on every push to a non-main branch and via `workflow_call`: lint (including a check that `dist/action` is rebuilt and committed), unit tests + coverage (matrix across ubuntu/windows/macos × Node 22/24/26), then NUTs on the same matrix.
+- **`release.yml`** — on push to `main`: rebuilds `dist/action` if stale; release-please opens/updates a release PR; when a release is published, it publishes to npm (OIDC Trusted Publishing), moves the floating `vN` tag consumers pin the Action to, and triggers the smoke test.
 - **`smoke-test.yml`** — installs the just-published plugin into a real `sf` CLI and reruns the NUT suite against it, cross-OS.
+- **`smoke-test-action.yml`** — exercises the GitHub Action itself: `./` (the checkout about to merge) on PRs touching Action files, `@vN` (the live published tag) on manual `workflow_dispatch`.
 - **`megalinter.yml`** — broad-spectrum linting on PRs (secrets, Dockerfiles, shell scripts, YAML, etc. — Biome already owns JS/TS, so those linters are disabled in `.mega-linter.yml` to avoid overlap).
 - **`mutation.yml`** — incremental Stryker on PRs (scoped to changed files, posts a PR comment); full run + optional dashboard upload via manual `workflow_dispatch`. Both jobs `npm install typescript@6.0.3 --no-save` right after `npm run compile` — Stryker's TypeScript checker plugin doesn't yet support TS 7 (only "experimental support" as of Stryker 10), so the repo's real TS 7 toolchain builds the plugin, then gets swapped for a TS 6 copy for just the mutation run. `--no-save` keeps `package.json`/the lockfile untouched, and the downgrade never leaves the job — runners are thrown away after each run.
+
+## GitHub Action
+
+The `hello` example is also shipped as a native GitHub Action (`action.yml`, `runs.using: node24`) — not a wrapper that shells out to `sf plugins install`. It imports the same `src/core/hello.ts` function the CLI command calls, and esbuild bundles it (plus `@actions/core` for typed inputs/outputs) into a single, git-committed `dist/action/index.cjs`. A consumer's workflow gets:
+
+```yaml
+- uses: <owner>/<repo>@v1
+  with:
+    name: 'World'
+```
+
+with no `sf` CLI install step, no plugin install, and typed `outputs.message` — just the Node runtime GitHub Actions already provides.
+
+**Why the bundle is committed, not built on demand:** GitHub Actions runs a `node24`-type Action's `main` file straight from the git ref a consumer pins (`@v1`, a SHA, a branch) — there's no build step in between. `dist/action/index.cjs` has to already exist at that ref. `test.yml`'s lint job re-runs `npm run build:action` and fails on any diff against the committed copy, so the bundle can't silently drift from `src/action`/`src/core`; `release.yml`'s `rebuild-dist` job is the safety net that keeps `main` itself current.
+
+**Versioning:** `release.yml` moves a floating `vN` tag (major version only) to every published release commit, so consumers pin `@v1` rather than an exact patch — the same convention `actions/checkout` and most published Actions use.
+
+**Extending to more commands:** the template wires exactly one command to the Action. See step 6 of [Adding a command](#adding-a-command) for the pattern (extract to `src/core/`) and its options for exposing more than one command.
+
+**Not shipping a GitHub Action?** Delete `action.yml`, `src/action/`, `test/action/`, `dist/action/`, the `build:action` wireit task and its `!/lib/action` entry in `package.json`'s `files`, `smoke-test-action.yml`, and the `rebuild-dist` job + floating-tag step in `release.yml`. The `src/core/` split is still good practice to keep even without the Action — it's what makes the command's logic unit-testable without going through oclif's parser.
 
 ## Trimming it down
 
@@ -167,6 +199,7 @@ Everything here is meant to be deleted, not just configured. In particular:
 - No plans to publish, or to publish infrequently? Delete `release.yml`'s smoke-test trigger and OIDC step; a plain `npm publish` locally is fine.
 - Not doing cross-platform NUTs? Collapse the `test.yml`/`smoke-test.yml` matrices to `ubuntu-latest` only.
 - Mutation testing and MegaLinter are the two heaviest, most opinionated pieces — drop `mutation.yml`, `stryker.config.json`, `scripts/incremental-mutation.mjs`, `megalinter.yml`, and `.mega-linter.yml` if they're not earning their CI minutes for your plugin.
+- Not shipping a GitHub Action? See the last paragraph of [GitHub Action](#github-action) for what to delete.
 
 ## License
 
