@@ -33,7 +33,7 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 | Lint + format      | ESLint + Prettier  | Biome (single tool, one config)                                          |
 | Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
 | Task orchestration | mix of @salesforce/dev-scripts, wireit, and scripts    | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
-| Commit hygiene     | none built in      | Husky + commitlint + lint-staged                                         |
+| Commit hygiene     | none built in (husky and commitlint files present but missing husky dev dep)       | Husky + commitlint + lint-staged                                         |
 | Releases           | manually triggered workflow            | release-please + npm Trusted Publishing (OIDC)                           |
 | GitHub Action      | none               | native node Action, sharing logic with the CLI command — see [GitHub Action](#github-action) |
 
