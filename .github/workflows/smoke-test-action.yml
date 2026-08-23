@@ -1,0 +1,64 @@
+# Manual smoke test: exercises the Action end to end on real GitHub Actions
+# infra.
+#
+# Two sources, deliberately not the same:
+# - pull_request: uses `./` (this checkout's actual action.yml/dist/action) -
+#   validates what's about to be merged before it ever reaches @v1.
+# - workflow_dispatch: uses `@v1` (the live published tag) - an on-demand
+#   check that what's actually public still works, run manually post-release.
+name: Smoke test (published Action)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/smoke-test-action.yml'
+      - 'action.yml'
+      - 'dist/action/**'
+      - 'src/action/**'
+      - 'src/core/**'
+
+permissions:
+  contents: read
+
+jobs:
+  success-path-local:
+    name: Success path (local checkout)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Say hello
+        id: hello
+        uses: ./
+        with:
+          name: 'Trailblazer'
+
+      - name: Show output
+        run: |
+          echo "message: ${{ steps.hello.outputs.message }}"
+          if [ "${{ steps.hello.outputs.message }}" != "Hello, Trailblazer!" ]; then
+            echo "Unexpected message output."
+            exit 1
+          fi
+
+  success-path-published:
+    name: Success path (published @v1)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello
+        id: hello
+        uses: mcarvin8/3dx@v1
+        with:
+          name: 'Trailblazer'
+
+      - name: Show output
+        run: |
+          echo "message: ${{ steps.hello.outputs.message }}"
+          if [ "${{ steps.hello.outputs.message }}" != "Hello, Trailblazer!" ]; then
+            echo "Unexpected message output."
+            exit 1
+          fi

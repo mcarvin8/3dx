@@ -1,0 +1,20 @@
+name: 'Hello'
+description: 'Print a greeting.'
+author: 'Matt Carvin'
+branding:
+  icon: 'terminal'
+  color: 'blue'
+
+inputs:
+  name:
+    description: 'Name to greet.'
+    required: false
+    default: 'World'
+
+outputs:
+  message:
+    description: 'The greeting message.'
+
+runs:
+  using: 'node24'
+  main: 'dist/action/index.cjs'
