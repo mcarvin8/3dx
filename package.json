@@ -88,15 +88,14 @@
   },
   "wireit": {
     "clean": {
-      "command": "shx rm -rf 'reports/*' oclif.manifest.json oclif.lock package.tgz '3dx-*.tgz' 'stderr*.txt' 'stdout*.txt' '.stryker-tmp/*'",
+      "command": "shx rm -rf 'reports/*' oclif.manifest.json oclif.lock '*.tgz' 'stderr*.txt' 'stdout*.txt' '.stryker-tmp/*'",
       "files": [
         ".stryker-tmp/*",
         "lib",
         "oclif.manifest.json",
         "oclif.lock",
-        "package.tgz",
         "reports/*",
-        "3dx-v*.tgz",
+        "*.tgz",
         "stderr*.txt",
         "stdout*.txt"
       ],
@@ -180,8 +179,8 @@
     "prepack": {
       "command": "oclif manifest && oclif readme",
       "files": [
-        "src/commands/3dx/hello.ts",
-        "messages/3dx.hello.md",
+        "src/commands/**/*.ts",
+        "messages/**/*.md",
         "README.md"
       ],
       "dependencies": [
@@ -195,8 +194,8 @@
     "readme": {
       "command": "oclif readme",
       "files": [
-        "src/commands/3dx/hello.ts",
-        "messages/3dx.hello.md",
+        "src/commands/**/*.ts",
+        "messages/**/*.md",
         "README.md"
       ],
       "dependencies": [
