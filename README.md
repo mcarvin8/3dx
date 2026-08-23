@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
+**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template — and, optionally, a matching GitHub Action wrapper — built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
 
 <details>
   <summary>Table of Contents</summary>
