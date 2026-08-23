@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/mcarvin8/3dx/compare/v1.2.4...v1.3.0) (2026-08-23)
+
+
+### Features
+
+* wrap the example command as a native GitHub Action ([#11](https://github.com/mcarvin8/3dx/issues/11)) ([ac608f5](https://github.com/mcarvin8/3dx/commit/ac608f57c090f8636ca4d1936757aabf413f95c9))
+
 ## [1.2.4](https://github.com/mcarvin8/3dx/compare/v1.2.3...v1.2.4) (2026-08-23)
 
 
