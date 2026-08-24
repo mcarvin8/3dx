@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/mcarvin8/3dx/compare/v1.3.0...v1.3.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* **deps:** Bump the dependencies group across 1 directory with 3 updates ([#13](https://github.com/mcarvin8/3dx/issues/13)) ([691ee8b](https://github.com/mcarvin8/3dx/commit/691ee8b32e749dc2cf69742d0521b8e7ac77f401))
+
 ## [1.3.0](https://github.com/mcarvin8/3dx/compare/v1.2.4...v1.3.0) (2026-08-23)
 
 
