@@ -25,17 +25,17 @@
 
 Salesforce's official template is the standard starting point for a new `sf` plugin, but its dependency stack has drifted from the latest the Node.js ecosystem has to offer:
 
-| Concern            | `plugin-template`  | `3dx`                                                                    |
-|--------------------|--------------------|--------------------------------------------------------------------------|
-| Package manager    | Yarn               | npm                                                                      |
-| Test runner        | Mocha + Chai       | Vitest                                                                   |
-| Coverage           | nyc (Istanbul CLI) | Vitest's built-in v8 coverage + upload to Codecov                        |
-| Lint + format      | ESLint + Prettier  | Biome (single tool, one config) + MegaLinter on PRs                                         |
-| Mutation testing   | none               | Stryker (optional, incremental on PRs)                                   |
-| Task orchestration | mix of @salesforce/dev-scripts, wireit, and scripts    | [Wireit](https://github.com/google/wireit) (caching, incremental builds) |
-| Commit hygiene     | none built in (husky and commitlint files present but missing husky dev dep)       | Husky + commitlint + lint-staged                                         |
-| Releases           | manually triggered workflow            | release-please + npm Trusted Publishing (OIDC)                           |
-| GitHub Action      | none               | native node Action, sharing logic with the CLI command — see [GitHub Action](#github-action) |
+| Concern            | `plugin-template`                                                            | `3dx`                                                                                        |
+|--------------------|------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| Package manager    | Yarn                                                                         | npm                                                                                          |
+| Test runner        | Mocha + Chai                                                                 | Vitest                                                                                       |
+| Coverage           | nyc (Istanbul CLI)                                                           | Vitest's built-in v8 coverage + upload to Codecov                                            |
+| Lint + format      | ESLint + Prettier                                                            | Biome (single tool, one config) + MegaLinter on PRs                                          |
+| Mutation testing   | none                                                                         | Stryker (optional, incremental on PRs)                                                       |
+| Task orchestration | mix of @salesforce/dev-scripts, wireit, and scripts                          | [Wireit](https://github.com/google/wireit) (caching, incremental builds)                     |
+| Commit hygiene     | none built in (husky and commitlint files present but missing husky dev dep) | Husky + commitlint + lint-staged                                                             |
+| Releases           | manually triggered workflow                                                  | release-please + npm Trusted Publishing (OIDC)                                               |
+| GitHub Action      | none                                                                         | native node Action, sharing logic with the CLI command — see [GitHub Action](#github-action) |
 
 None of this changes what a plugin *is* — it's still an [oclif](https://oclif.io/) command tree using `@oclif/core` and `@salesforce/sf-plugins-core`, same as the official template. What changes is everything around it: faster installs, one linter instead of two, tests that don't need a compile step first, and CI that mirrors what you'd actually run locally.
 
@@ -144,7 +144,7 @@ EXAMPLES
   `sf 3dx hello --name "World"`
 ```
 
-_See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.3.0/src/commands/3dx/hello.ts)_
+*See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.3.0/src/commands/3dx/hello.ts)*
 <!-- commandsstop -->
 
 ## Scripts
