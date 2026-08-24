@@ -144,7 +144,7 @@ EXAMPLES
   `sf 3dx hello --name "World"`
 ```
 
-*See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.3.0/src/commands/3dx/hello.ts)*
+_See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.3.0/src/commands/3dx/hello.ts)_
 <!-- commandsstop -->
 
 ## Scripts
