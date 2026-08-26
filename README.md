@@ -95,8 +95,7 @@ src/
 messages/
   3dx.hello.md             # summary/description/examples/flag text, loaded via Messages
 test/
-  commands/3dx/hello.test.ts  # unit test — imports the command class directly
-  commands/3dx/hello.nut.ts   # NUT — drives the compiled plugin through execCmd
+  commands/3dx/hello.nut.ts   # NUT — drives the compiled plugin through execCmd (only layer that exercises the command class)
   core/hello.test.ts          # unit test — imports the pure logic function directly
   action/main.test.ts         # unit test — mocks @actions/core and src/core
   mcp/server.test.ts          # unit test — drives the real McpServer over an in-memory transport
@@ -115,12 +114,11 @@ Logic goes in `src/core/` by default, not inline in the command class — this i
 1. Add `messages/<topic>.<command>.md` with `# summary`, `# description`, `# examples`, and `# flags.<name>.summary` sections per flag.
 2. Add `src/core/<command>.ts` as a plain function (no oclif/`@salesforce/*` imports) holding the actual logic and its typed result.
 3. Add `src/commands/<topic>/<command>.ts` extending `SfCommand<YourResultType>`, loading the message file via `Messages.loadMessages('<package-name>', '<topic>.<command>')`. `run()` should do nothing but parse flags, call the `src/core/` function, log/return the result — see `hello`'s `run()` for the shape.
-4. Add a unit test under `test/core/<command>.test.ts` that calls the plain function directly and asserts on its return value — this is where the real logic coverage lives.
-5. Add a thin unit test under `test/commands/<topic>/<command>.test.ts` that calls `YourCommand.run([...])` directly — this one is just checking flag parsing wires through to the `src/core/` call correctly, not re-testing the logic.
-6. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`. This is the only layer that should exercise the real, compiled `sf` CLI process — the two unit tests above run against TypeScript directly and never shell out.
-7. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
-8. Want this command exposed as a [GitHub Action](#github-action) too? Nothing left to extract — have `src/action/main.ts` call the `src/core/<command>.ts` function the same way `hello`'s does. The template only wires the Action to one command at a time — exposing more than one is a per-plugin decision (either branch on an Action input, or ship additional `action.yml` files in subdirectories).
-9. Want this command exposed via [MCP](#mcp-server) too? Same function, one more caller: add a `server.registerTool(...)` call in `src/mcp/server.ts` that invokes it. No extra build step — `src/mcp` compiles as part of the normal `tsc` output, unlike the Action's bundle.
+4. Add a unit test under `test/core/<command>.test.ts` that calls the plain function directly and asserts on its return value — this is the only unit test the command needs; the `src/commands/` class is thin enough that testing it directly would just be re-testing the same logic through an extra layer of indirection.
+5. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`. This is the only layer that should exercise the real, compiled `sf` CLI process — including flag parsing through oclif, which the core unit test above never touches.
+6. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
+7. Want this command exposed as a [GitHub Action](#github-action) too? Nothing left to extract — have `src/action/main.ts` call the `src/core/<command>.ts` function the same way `hello`'s does. The template only wires the Action to one command at a time — exposing more than one is a per-plugin decision (either branch on an Action input, or ship additional `action.yml` files in subdirectories).
+8. Want this command exposed via [MCP](#mcp-server) too? Same function, one more caller: add a `server.registerTool(...)` call in `src/mcp/server.ts` that invokes it. No extra build step — `src/mcp` compiles as part of the normal `tsc` output, unlike the Action's bundle.
 
 ## Command Reference
 
