@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/mcarvin8/3dx/compare/v1.3.1...v1.4.0) (2026-08-26)
+
+
+### Features
+
+* add MCP server as a third consumer of src/core ([#17](https://github.com/mcarvin8/3dx/issues/17)) ([fa126c1](https://github.com/mcarvin8/3dx/commit/fa126c12ffda7d6b5888ce11b86559fe901bdc32))
+
 ## [1.3.1](https://github.com/mcarvin8/3dx/compare/v1.3.0...v1.3.1) (2026-08-24)
 
 
