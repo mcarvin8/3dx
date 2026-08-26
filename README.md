@@ -106,17 +106,21 @@ dist/action/index.cjs         # committed esbuild bundle the Action manifest poi
 bin/mcp.js                    # MCP server entrypoint (npm "bin": 3dx-mcp), see MCP Server
 ```
 
-Command, message file, unit test, and NUT are named to mirror each other 1:1 — that mapping is what `knip.config.ts` and the Stryker `mutate` excludes assume. `src/core/hello.ts` is what makes the command and the Action reusable from one place — see [GitHub Action](#github-action).
+Command, message file, unit test, and NUT are named to mirror each other 1:1 — that mapping is what `knip.config.ts` and the Stryker `mutate` excludes assume. `src/core/hello.ts` is the default home for a command's logic, not an opt-in — it's what makes the logic unit-testable without oclif's parser in the loop, and incidentally what makes the command reusable from the Action and MCP server — see [Adding a command](#adding-a-command).
 
 ## Adding a command
 
+Logic goes in `src/core/` by default, not inline in the command class — this isn't only for Action/MCP reuse, it's what keeps the logic unit-testable without going through oclif's parser. `hello` is the reference: `src/core/hello.ts` holds the function, `src/commands/3dx/hello.ts` is a thin wrapper around it.
+
 1. Add `messages/<topic>.<command>.md` with `# summary`, `# description`, `# examples`, and `# flags.<name>.summary` sections per flag.
-2. Add `src/commands/<topic>/<command>.ts` extending `SfCommand<YourResultType>`, loading the message file via `Messages.loadMessages('<package-name>', '<topic>.<command>')`.
-3. Add a unit test under `test/commands/<topic>/<command>.test.ts` that calls `YourCommand.run([...])` directly and asserts on the returned result.
-4. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`.
-5. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
-6. Want this command exposed as a [GitHub Action](#github-action) too? Extract its logic into `src/core/<command>.ts` as a plain function (that's already how `hello` is wired), then have both the command class and `src/action/main.ts` call it. The template only wires the Action to one command at a time — exposing more than one is a per-plugin decision (either branch on an Action input, or ship additional `action.yml` files in subdirectories).
-7. Want this command exposed via [MCP](#mcp-server) too? Same `src/core/<command>.ts` function, one more caller: add a `server.registerTool(...)` call in `src/mcp/server.ts` that invokes it. No extra build step — `src/mcp` compiles as part of the normal `tsc` output, unlike the Action's bundle.
+2. Add `src/core/<command>.ts` as a plain function (no oclif/`@salesforce/*` imports) holding the actual logic and its typed result.
+3. Add `src/commands/<topic>/<command>.ts` extending `SfCommand<YourResultType>`, loading the message file via `Messages.loadMessages('<package-name>', '<topic>.<command>')`. `run()` should do nothing but parse flags, call the `src/core/` function, log/return the result — see `hello`'s `run()` for the shape.
+4. Add a unit test under `test/core/<command>.test.ts` that calls the plain function directly and asserts on its return value — this is where the real logic coverage lives.
+5. Add a thin unit test under `test/commands/<topic>/<command>.test.ts` that calls `YourCommand.run([...])` directly — this one is just checking flag parsing wires through to the `src/core/` call correctly, not re-testing the logic.
+6. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`. This is the only layer that should exercise the real, compiled `sf` CLI process — the two unit tests above run against TypeScript directly and never shell out.
+7. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
+8. Want this command exposed as a [GitHub Action](#github-action) too? Nothing left to extract — have `src/action/main.ts` call the `src/core/<command>.ts` function the same way `hello`'s does. The template only wires the Action to one command at a time — exposing more than one is a per-plugin decision (either branch on an Action input, or ship additional `action.yml` files in subdirectories).
+9. Want this command exposed via [MCP](#mcp-server) too? Same function, one more caller: add a `server.registerTool(...)` call in `src/mcp/server.ts` that invokes it. No extra build step — `src/mcp` compiles as part of the normal `tsc` output, unlike the Action's bundle.
 
 ## Command Reference
 
