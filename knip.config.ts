@@ -2,6 +2,7 @@ export default {
   entry: [
     'src/commands/**/*.ts',
     'src/action/*.ts',
+    'src/mcp/*.ts',
     'bin/dev.js',
     'bin/run.js',
     'scripts/**/*.{ts,mjs}',
