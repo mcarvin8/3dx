@@ -202,6 +202,9 @@
     },
     "prepack": {
       "command": "oclif manifest && oclif readme",
+      "env": {
+        "COLUMNS": "120"
+      },
       "files": [
         "src/commands/**/*.ts",
         "messages/**/*.md",
@@ -217,6 +220,9 @@
     },
     "readme": {
       "command": "oclif readme",
+      "env": {
+        "COLUMNS": "120"
+      },
       "files": [
         "src/commands/**/*.ts",
         "messages/**/*.md",
