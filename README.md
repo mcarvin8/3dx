@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/3dx/main/LICENSE.md)
 
-**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template — and, optionally, a matching GitHub Action wrapper — built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
+**3dx** is a community-built **third-party developer experience for Salesforce CLI**, providing a modern `sf` plugin template — and, optionally, a matching GitHub Action wrapper and MCP server — built on npm, [Vitest](https://vitest.dev/), and [Biome](https://biomejs.dev/) instead of the legacy-leaning toolchain in Salesforce's official plugin template.
 
 <details>
   <summary>Table of Contents</summary>
@@ -16,6 +16,7 @@
 - [Scripts](#scripts)
 - [CI workflows](#ci-workflows)
 - [GitHub Action](#github-action)
+- [MCP Server](#mcp-server)
 - [Trimming it down](#trimming-it-down)
 - [License](#license)
 
@@ -36,6 +37,7 @@ Salesforce's official template is the standard starting point for a new `sf` plu
 | Commit hygiene     | none built in (husky and commitlint files present but missing husky dev dep) | Husky + commitlint + lint-staged                                                             |
 | Releases           | manually triggered workflow                                                  | release-please + npm Trusted Publishing (OIDC)                                               |
 | GitHub Action      | none                                                                         | native node Action, sharing logic with the CLI command — see [GitHub Action](#github-action) |
+| MCP server         | none                                                                         | stdio MCP server, sharing logic with the CLI command — see [MCP Server](#mcp-server)         |
 
 None of this changes what a plugin *is* — it's still an [oclif](https://oclif.io/) command tree using `@oclif/core` and `@salesforce/sf-plugins-core`, same as the official template. What changes is everything around it: faster installs, one linter instead of two, tests that don't need a compile step first, and CI that mirrors what you'd actually run locally.
 
@@ -53,6 +55,7 @@ None of this changes what a plugin *is* — it's still an [oclif](https://oclif.
 - **Dependency hygiene**: `knip` flags unused exports/files/deps; `ls-engines` checks the dependency tree against the `engines.node` floor.
 - **CI**: GitHub Actions for lint + unit tests + NUTs across OS/Node matrices, MegaLinter on PRs, incremental Stryker on PRs, and a release pipeline (release-please → npm publish via OIDC → post-publish smoke test).
 - **GitHub Action**: the example command is also wrapped as a committed, bundled `action.yml` so consumers can `uses: <owner>/<repo>@v1` in their own workflows without installing the plugin — see [GitHub Action](#github-action).
+- **MCP server**: the example command is also wrapped as a stdio [MCP](https://modelcontextprotocol.io/) server (`bin/mcp.js`, `@modelcontextprotocol/sdk`) so agent clients (Claude, Cursor, etc.) can call it as a tool without going through `sf` — see [MCP Server](#mcp-server).
 
 ## Using this template
 
@@ -87,6 +90,7 @@ src/
   commands/3dx/hello.ts   # one command = one file; thin wrapper over src/core
   core/hello.ts             # the actual logic — a plain function, no oclif/Action deps
   action/{index,main}.ts    # GitHub Action entrypoint, wraps src/core the same way
+  mcp/{index,main,server}.ts  # MCP stdio server, wraps src/core the same way
   index.ts                  # oclif plugin entry point (leave as `export default {}`)
 messages/
   3dx.hello.md             # summary/description/examples/flag text, loaded via Messages
@@ -95,8 +99,11 @@ test/
   commands/3dx/hello.nut.ts   # NUT — drives the compiled plugin through execCmd
   core/hello.test.ts          # unit test — imports the pure logic function directly
   action/main.test.ts         # unit test — mocks @actions/core and src/core
+  mcp/server.test.ts          # unit test — drives the real McpServer over an in-memory transport
+  mcp/main.test.ts            # unit test — mocks src/mcp/server and the stdio transport
 action.yml                    # GitHub Action manifest, see GitHub Action
 dist/action/index.cjs         # committed esbuild bundle the Action manifest points at
+bin/mcp.js                    # MCP server entrypoint (npm "bin": 3dx-mcp), see MCP Server
 ```
 
 Command, message file, unit test, and NUT are named to mirror each other 1:1 — that mapping is what `knip.config.ts` and the Stryker `mutate` excludes assume. `src/core/hello.ts` is what makes the command and the Action reusable from one place — see [GitHub Action](#github-action).
@@ -109,6 +116,7 @@ Command, message file, unit test, and NUT are named to mirror each other 1:1 —
 4. Add a NUT under `test/commands/<topic>/<command>.nut.ts` using `execCmd` from `@salesforce/cli-plugins-testkit`.
 5. Run `npm run readme` to regenerate the [Command Reference](#command-reference) from your command's flags and message file, then commit the updated `README.md`.
 6. Want this command exposed as a [GitHub Action](#github-action) too? Extract its logic into `src/core/<command>.ts` as a plain function (that's already how `hello` is wired), then have both the command class and `src/action/main.ts` call it. The template only wires the Action to one command at a time — exposing more than one is a per-plugin decision (either branch on an Action input, or ship additional `action.yml` files in subdirectories).
+7. Want this command exposed via [MCP](#mcp-server) too? Same `src/core/<command>.ts` function, one more caller: add a `server.registerTool(...)` call in `src/mcp/server.ts` that invokes it. No extra build step — `src/mcp` compiles as part of the normal `tsc` output, unlike the Action's bundle.
 
 ## Command Reference
 
@@ -192,6 +200,35 @@ with no `sf` CLI install step, no plugin install, and typed `outputs.message` �
 
 **Not shipping a GitHub Action?** Delete `action.yml`, `src/action/`, `test/action/`, `dist/action/`, the `build:action` wireit task and its `!/lib/action` entry in `package.json`'s `files`, `smoke-test-action.yml`, and the `rebuild-dist` job + floating-tag step in `release.yml`. The `src/core/` split is still good practice to keep even without the Action — it's what makes the command's logic unit-testable without going through oclif's parser.
 
+## MCP Server
+
+The `hello` example is also shipped as a native [MCP](https://modelcontextprotocol.io/) server over stdio (`src/mcp/{index,main,server}.ts`, `@modelcontextprotocol/sdk`) — a third caller of the same `src/core/hello.ts` function the CLI command and GitHub Action use. Unlike the Action, it isn't bundled: `npm run build`'s normal `tsc` compile already produces `lib/mcp/*.js`, and `package.json`'s `bin` field (`3dx-mcp` → `bin/mcp.js`) makes it runnable directly once the package is installed — no separate wireit task, no committed dist artifact, no dedicated CI workflow (the existing `test.yml` unit-test matrix already covers `test/mcp/**`).
+
+Point an MCP-capable client (Claude Code, Claude Desktop, Cursor, etc.) at it once the plugin is installed globally or via `npx`:
+
+```json
+{
+  "mcpServers": {
+    "3dx": {
+      "command": "npx",
+      "args": ["-y", "@mcarvin/3dx"]
+    }
+  }
+}
+```
+
+or, against a global install, `"command": "3dx-mcp"` with no `args`. The client gets one tool, `hello`, with a `name` input mirroring the CLI's `-n, --name` flag.
+
+**Structure**, mirroring the Action's `index`/`main` split:
+
+- `src/mcp/server.ts` — `createServer()`, a pure `McpServer` factory that registers tools. Unit-tested directly (`test/mcp/server.test.ts`) by connecting a real `Client` over `InMemoryTransport` and calling `hello` end to end — no mocking of the SDK's protocol layer.
+- `src/mcp/main.ts` — `run()`, wires `createServer()` to a `StdioServerTransport`. Unit-tested (`test/mcp/main.test.ts`) with both mocked, same pattern as `test/action/main.test.ts`.
+- `src/mcp/index.ts` — thin entrypoint (`void run()`), imported by `bin/mcp.js`.
+
+**Extending to more commands:** add one `server.registerTool(...)` call per command in `src/mcp/server.ts` — see step 7 of [Adding a command](#adding-a-command). Unlike the Action (one command per `action.yml` unless you branch on inputs), a single MCP server can register as many tools as you want.
+
+**Not shipping an MCP server?** Delete `src/mcp/`, `test/mcp/`, `bin/mcp.js`, the `bin` field and the `@modelcontextprotocol/sdk`/`zod` dependencies in `package.json`, then run `npm install` to refresh the lockfile. The `src/core/` split is still good practice to keep even without it.
+
 ## Trimming it down
 
 Everything here is meant to be deleted, not just configured. In particular:
@@ -200,6 +237,7 @@ Everything here is meant to be deleted, not just configured. In particular:
 - Not doing cross-platform NUTs? Collapse the `test.yml`/`smoke-test.yml` matrices to `ubuntu-latest` only.
 - Mutation testing and MegaLinter are the two heaviest, most opinionated pieces — drop `mutation.yml`, `stryker.config.json`, `scripts/incremental-mutation.mjs`, `megalinter.yml`, and `.mega-linter.yml` if they're not earning their CI minutes for your plugin.
 - Not shipping a GitHub Action? See the last paragraph of [GitHub Action](#github-action) for what to delete.
+- Not shipping an MCP server? See the last paragraph of [MCP Server](#mcp-server) for what to delete.
 
 ## License
 
