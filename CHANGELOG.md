@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/mcarvin8/3dx/compare/v1.4.0...v1.5.0) (2026-08-28)
+
+
+### Features
+
+* add generate:command script to scaffold new commands ([7f979e2](https://github.com/mcarvin8/3dx/commit/7f979e237fecb940f6ae745ce24f3a44812fa303))
+
 ## [1.4.0](https://github.com/mcarvin8/3dx/compare/v1.3.1...v1.4.0) (2026-08-26)
 
 
