@@ -80,6 +80,7 @@
     "clean:package-manager": "wireit",
     "compile": "wireit",
     "format": "wireit",
+    "generate:command": "node scripts/generate-command.mjs",
     "init": "node scripts/init.mjs",
     "lint": "wireit",
     "lint:dependencies": "wireit",

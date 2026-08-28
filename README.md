@@ -109,6 +109,8 @@ Command, message file, unit test, and NUT are named to mirror each other 1:1 —
 
 ## Adding a command
 
+Run `npm run generate:command` to scaffold steps 1-6 below (message file, `src/core/` stub, command class, unit test, NUT, README regen) from a couple of prompts -- it writes a placeholder `{ success: true }` result for you to replace with real logic. Steps 7-8 (Action/MCP wiring) stay manual since they're per-plugin decisions. The rest of this section documents what the generator does, and is the manual path if you'd rather not use it.
+
 Logic goes in `src/core/` by default, not inline in the command class — this isn't only for Action/MCP reuse, it's what keeps the logic unit-testable without going through oclif's parser. `hello` is the reference: `src/core/hello.ts` holds the function, `src/commands/3dx/hello.ts` is a thin wrapper around it.
 
 1. Add `messages/<topic>.<command>.md` with `# summary`, `# description`, `# examples`, and `# flags.<name>.summary` sections per flag.
@@ -171,6 +173,7 @@ _See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.4
 | `npm run lint` / `format`           | Biome check / write                               |
 | `npm run lint:dependencies`         | knip — unused files/exports/deps                  |
 | `npm run lint:engine`               | ls-engines — dependency tree vs. `engines.node`   |
+| `npm run generate:command`          | Scaffold a new command (see [Adding a command](#adding-a-command)) |
 | `npm run clean`                     | Remove build/test artifacts                       |
 
 ## CI workflows
