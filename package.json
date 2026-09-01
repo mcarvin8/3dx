@@ -5,9 +5,9 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
     "@oclif/core": "4.14.0",
-    "@salesforce/core": "9.1.4",
+    "@salesforce/core": "9.1.8",
     "@salesforce/sf-plugins-core": "13.0.3",
-    "zod": "4.4.3"
+    "zod": "4.5.2"
   },
   "devDependencies": {
     "@actions/core": "3.0.1",
