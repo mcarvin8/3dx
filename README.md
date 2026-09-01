@@ -161,20 +161,20 @@ _See code: [src/commands/3dx/hello.ts](https://github.com/mcarvin8/3dx/blob/v1.5
 
 ## Scripts
 
-| Command                             | Does                                              |
-|-------------------------------------|---------------------------------------------------|
-| `npm run build`                     | Compile + lint + Action bundle                    |
-| `npm run build:action`              | Bundle `src/action` into `dist/action/index.cjs`  |
-| `npm test`                          | Compile tests + unit tests (with coverage) + lint |
-| `npm run test:only`                 | Unit tests + coverage, no lint/compile            |
-| `npm run test:nuts`                 | NUTs against the built plugin                     |
-| `npm run test:mutation`             | Full Stryker run                                  |
-| `npm run test:mutation:incremental` | Stryker against files changed vs. the base branch |
-| `npm run lint` / `format`           | Biome check / write                               |
-| `npm run lint:dependencies`         | knip — unused files/exports/deps                  |
-| `npm run lint:engine`               | ls-engines — dependency tree vs. `engines.node`   |
+| Command                             | Does                                                               |
+|-------------------------------------|--------------------------------------------------------------------|
+| `npm run build`                     | Compile + lint + Action bundle                                     |
+| `npm run build:action`              | Bundle `src/action` into `dist/action/index.cjs`                   |
+| `npm test`                          | Compile tests + unit tests (with coverage) + lint                  |
+| `npm run test:only`                 | Unit tests + coverage, no lint/compile                             |
+| `npm run test:nuts`                 | NUTs against the built plugin                                      |
+| `npm run test:mutation`             | Full Stryker run                                                   |
+| `npm run test:mutation:incremental` | Stryker against files changed vs. the base branch                  |
+| `npm run lint` / `format`           | Biome check / write                                                |
+| `npm run lint:dependencies`         | knip — unused files/exports/deps                                   |
+| `npm run lint:engine`               | ls-engines — dependency tree vs. `engines.node`                    |
 | `npm run generate:command`          | Scaffold a new command (see [Adding a command](#adding-a-command)) |
-| `npm run clean`                     | Remove build/test artifacts                       |
+| `npm run clean`                     | Remove build/test artifacts                                        |
 
 ## CI workflows
 
