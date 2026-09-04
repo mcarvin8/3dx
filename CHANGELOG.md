@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/mcarvin8/3dx/compare/v1.5.0...v1.5.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **deps:** Bump the dependencies group with 2 updates ([#20](https://github.com/mcarvin8/3dx/issues/20)) ([4effcbb](https://github.com/mcarvin8/3dx/commit/4effcbbc2594289546b89ef7cbbaaae0eb5a4f74))
+
 ## [1.5.0](https://github.com/mcarvin8/3dx/compare/v1.4.0...v1.5.0) (2026-08-28)
 
 
