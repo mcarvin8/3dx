@@ -7,12 +7,7 @@
     "related": false
   },
   "coverageAnalysis": "perTest",
-  "mutate": [
-    "src/**/*.ts",
-    "!src/**/*.d.ts",
-    "!src/index.ts",
-    "!src/commands/**/*.ts"
-  ],
+  "mutate": ["src/**/*.ts", "!src/**/*.d.ts", "!src/index.ts", "!src/commands/**/*.ts"],
   "reporters": ["html", "json", "clear-text", "progress"],
   "htmlReporter": {
     "fileName": "reports/mutation/index.html"
