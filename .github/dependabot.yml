@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "build"
+      prefix: "build(github-actions)"
     groups:
       github-actions:
         patterns:
@@ -15,10 +15,10 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "fix(deps)"
-      prefix-development: "chore(dev-deps)"
+      prefix: "build(npm)"
+    allow:
+      - dependency-type: "direct"
     groups:
-      dependencies:
-        dependency-type: "production"
-      dev-dependencies:
-        dependency-type: "development"
+      npm:
+        patterns:
+          - "*"
